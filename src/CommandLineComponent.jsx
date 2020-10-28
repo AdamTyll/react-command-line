@@ -23,7 +23,7 @@ class CommandLine extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      buffer: this.props.messages['WELCOME_MESSAGE'].split("\n"),
+      buffer: [this.props.messages['WELCOME_MESSAGE']()],
       typingAllowed: true
     }
     this.promptRef = React.createRef();
@@ -37,12 +37,12 @@ class CommandLine extends React.Component {
     this.promptRef.current.focus();
   }
 
-  _appendToBufferArray(str) {
-    this.tempBuffer = [... this.tempBuffer, ... str.split("\n")];
+  _appendToBufferArray(fn) {
+    this.tempBuffer = [...this.tempBuffer, fn()];
   }
 
   _handleEnter() {
-    this._appendToBufferArray(this.props.prompt + this.promptRef.current.innerText);
+    this._appendToBufferArray(() => this.props.prompt + this.promptRef.current.innerText);
     const input = this.promptRef.current.innerText.trim();
     const commandNameToRun = /^([^\s]*)\s?.*$/.exec(input)?.pop();
     // reset the prompt
@@ -63,7 +63,7 @@ class CommandLine extends React.Component {
       command.fn(args).then(result => {
         this.setState({
           typingAllowed: true,
-          buffer: [...this.state.buffer, result]
+          buffer: [...this.state.buffer, result()]
         });
       });
     } else {
@@ -97,7 +97,7 @@ class CommandLine extends React.Component {
     return (
       <div style={styles.cli} onClick={this._focusPrompt} className="react_cli">
         {lines}
-        <p style={{display: this.state.typingAllowed ? 'block' : 'none'}}><span>{this.props.prompt}</span><span spellCheck="false" contentEditable="true" onKeyDown={this._handleKeyDown} ref={this.promptRef} style={{display: 'inline-block', verticalAlign: 'top'}}></span></p>
+        <p style={{display: this.state.typingAllowed ? 'block' : 'none'}}><strong>{this.props.prompt}</strong><span spellCheck="false" contentEditable="true" onKeyDown={this._handleKeyDown} ref={this.promptRef} style={{display: 'inline-block', verticalAlign: 'top'}}></span></p>
       </div>
     );
   }
