@@ -99,12 +99,14 @@ class CommandLine extends React.Component {
     const lines = this.state.buffer.map((line, index) => <p key={index}>{line}</p>);
 
     return (
-      <SimpleBar style={{  maxHeight: '100vw' }}>
+      
       <div style={styles.cli} onClick={this._focusPrompt} className="react_cli">
-        {lines}
-        <p  ref={this.endLine} style={{display: this.state.typingAllowed ? 'block' : 'none'}}><strong>{this.props.prompt}</strong><span spellCheck="false" contentEditable="true" onKeyDown={this._handleKeyDown} ref={this.promptRef} style={{display: 'inline-block', verticalAlign: 'top'}}></span></p>
+        <SimpleBar style={{  maxHeight: '100%' }}>
+          {lines}
+          <p  ref={this.endLine} style={{display: this.state.typingAllowed ? 'block' : 'none'}}><strong>{this.props.prompt}</strong><span spellCheck="false" contentEditable="true" onKeyDown={this._handleKeyDown} ref={this.promptRef} style={{display: 'inline-block', verticalAlign: 'top'}}></span></p>
+        </SimpleBar>
       </div>
-      </SimpleBar>
+      
     );
   }
 }
