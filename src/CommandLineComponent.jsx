@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const propTypes = {
-  messages: PropTypes.objectOf(PropTypes.string),
+  messages: PropTypes.objectOf(PropTypes.func),
   commands: PropTypes.object.isRequired,
   prompt: PropTypes.string,
   autoFocus: PropTypes.bool
@@ -12,14 +12,14 @@ const defaultProps = {
   prompt: '> ',
   commands: {},
   messages: {
-    'WELCOME_MESSAGE': '',
-    'INVALID_COMMAND': 'Invalid command.'
+    'WELCOME_MESSAGE': () => '',
+    'INVALID_COMMAND': () => 'Invalid command.'
   },
   autoFocus: true
 }
 
 
-class CommandLine extends React.Component {
+class CommandLine extends React.Component { 
   constructor(props) {
     super(props);
     this.state = {
@@ -27,6 +27,7 @@ class CommandLine extends React.Component {
       typingAllowed: true
     }
     this.promptRef = React.createRef();
+    this.endLine = React.createRef();
     this._focusPrompt = this._focusPrompt.bind(this);
     this._appendToBufferArray = this._appendToBufferArray.bind(this);
     this._handleKeyDown = this._handleKeyDown.bind(this);
@@ -39,6 +40,7 @@ class CommandLine extends React.Component {
 
   _appendToBufferArray(fn) {
     this.tempBuffer = [...this.tempBuffer, fn()];
+    this.endLine.current.scrollIntoView({ behavior: 'smooth' })
   }
 
   _handleEnter() {
@@ -97,7 +99,7 @@ class CommandLine extends React.Component {
     return (
       <div style={styles.cli} onClick={this._focusPrompt} className="react_cli">
         {lines}
-        <p style={{display: this.state.typingAllowed ? 'block' : 'none'}}><strong>{this.props.prompt}</strong><span spellCheck="false" contentEditable="true" onKeyDown={this._handleKeyDown} ref={this.promptRef} style={{display: 'inline-block', verticalAlign: 'top'}}></span></p>
+        <p  ref={this.endLine} style={{display: this.state.typingAllowed ? 'block' : 'none'}}><strong>{this.props.prompt}</strong><span spellCheck="false" contentEditable="true" onKeyDown={this._handleKeyDown} ref={this.promptRef} style={{display: 'inline-block', verticalAlign: 'top'}}></span></p>
       </div>
     );
   }
