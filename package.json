@@ -28,8 +28,7 @@
   },
   "homepage": "https://github.com/podrezo/react-command-line#readme",
   "dependencies": {
-    "react": "^16.12.0",
-    "simplebar-react": "^2.3.0"
+    "react": "^16.12.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
